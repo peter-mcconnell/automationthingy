@@ -1,0 +1,18 @@
+{{ define "project" }}
+{{ template "header" . }}
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded-top p-4">
+        <div class="row">
+            <h3>Projects &raquo; {{ .View.Project.Name }}</h3>
+            <p>{{ .View.Project.Description }}</p>
+            {{ range .View.Project.Jobs }}
+            <div class="job">
+                <p><a href="/job/{{ .ID }}">{{ .Name }}</a></p>
+                <p>{{ .Description }}</p>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{ template "footer" . }}
+{{ end }}

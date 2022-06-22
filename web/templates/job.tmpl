@@ -1,0 +1,54 @@
+{{ define "job" }}
+{{ template "header" . }}
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary rounded-top p-4">
+        <div class="row">
+            <h3>Job &raquo; {{ .View.Job.Name }}</h3>
+            <p>{{ .View.Job.Description }}</p>
+            <form>
+                <div class="row mb-3">
+                    <label for="input1" class="col-sm-2 col-form-label">Command</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="input1">
+                    </div>
+                </div>
+                <fieldset class="row mb-3">
+                    <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked="">
+                            <label class="form-check-label" for="gridRadios1">
+                                First radio
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                            <label class="form-check-label" for="gridRadios2">
+                                Second radio
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row mb-3">
+                    <legend class="col-form-label col-sm-2 pt-0">Checkbox</legend>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="gridCheck1">
+                            <label class="form-check-label" for="gridCheck1">
+                                Check me out
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="execution_buttons">
+                    <button type="button" class="btn btn-success rounded-pill m-2" id="execute_job_btn">Execute</button>
+                    <button type="button" class="btn btn-info rounded-pill m-2" id="execute_source_btn">View Source</button>
+                    <button type="button" class="btn btn-outline-danger rounded-pill m-2" id="execute_cancel_btn">Cancel Execution</button>
+                </div>
+            </form>
+            <div id="execution"></div>
+        </div>
+    </div>
+</div>
+{{ template "footer" . }}
+{{ end }}
