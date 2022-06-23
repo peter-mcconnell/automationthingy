@@ -4,7 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/peter-mcconnell/automationthingy/scm"
+	"github.com/google/uuid"
+	"github.com/peter-mcconnell/automationthingy/config"
 )
 
 type Logger interface {
@@ -16,13 +17,14 @@ type Server struct {
 	mux       *http.ServeMux
 	templates *template.Template
 	routes    []*route
+	Config    *config.Config
 }
 
 type ApiRequest struct {
 	apiVersion    string
 	resource      string
 	sub_resources []string
-	id            string
+	id            uuid.UUID
 	writer        http.ResponseWriter
 	request       *http.Request
 }
@@ -38,7 +40,12 @@ func NewServer(logger Logger, mux *http.ServeMux) (*Server, error) {
 		logger: logger,
 		mux:    mux,
 	}
-	go scm.CloneJobRepos()
+	cfg := config.Config{}
+	automationthingyConfig, err := cfg.LoadConfig()
+	if err != nil {
+		return server, err
+	}
+	server.Config = &automationthingyConfig
 	if err := server.addRoutes(); err != nil {
 		return server, err
 	}

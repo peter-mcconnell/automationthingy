@@ -1,12 +1,10 @@
 package api
 
 import (
-	"bufio"
-	"io"
 	"net/http"
-	"os/exec"
 
-	executor "github.com/peter-mcconnell/automationthingy/executor"
+	"github.com/peter-mcconnell/automationthingy/executor"
+	"github.com/peter-mcconnell/automationthingy/model"
 )
 
 type CommandRequest struct {
@@ -23,18 +21,20 @@ func (s *Server) apiV1ExecutorLocal(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 
 	apiRequest := s.parseApiRequest(r.URL.Path)
+	scriptModel := model.Script{
+		Config: *s.Config,
+	}
+	script, err := scriptModel.GetOne(apiRequest.id)
+	if err != nil {
+		// TODO: add proper error handling
+		panic(err)
+	}
 	exectr := executor.LocalExecutor{
-		ID: apiRequest.id,
+		ID:             apiRequest.id,
+		Config:         *s.Config,
+		Script:         script,
+		Flusher:        flusher,
+		ResponseWriter: w,
 	}
 	exectr.Execute()
-	cmd := exec.Command("ping", "-c4", "8.8.8.8")
-	out, _ := cmd.StdoutPipe()
-	cmd.Start()
-
-	scanner := bufio.NewScanner(out)
-	scanner.Split(bufio.ScanLines)
-	for scanner.Scan() {
-		io.WriteString(w, scanner.Text()+"\n")
-		flusher.Flush()
-	}
 }

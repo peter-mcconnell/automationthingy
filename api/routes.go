@@ -3,6 +3,8 @@ package api
 import (
 	"net/http"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 type route struct {
@@ -12,9 +14,15 @@ type route struct {
 
 func (s *Server) parseApiRequest(url string) ApiRequest {
 	uriParts := strings.Split(url, "/")[2:]
-	id := ""
+	var (
+		id  uuid.UUID
+		err error
+	)
 	if len(uriParts) > 1 {
-		id = uriParts[2]
+		id, err = uuid.Parse(uriParts[2])
+		if err != nil {
+			panic(err)
+		}
 	}
 	return ApiRequest{
 		apiVersion:    uriParts[0],

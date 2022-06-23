@@ -1,0 +1,47 @@
+---
+# sample .automationthingy.yaml for your viewing pleasure
+rbac:
+  roles:
+    - name: "admin"
+    - name: "developers"
+  groups:
+    - name: "admin"
+      roles:
+        - "admin"
+    - name: "developers"
+      roles:
+        - "developers"
+
+scripts:
+  - id: "268c55ac-6e2b-4c99-b84c-535b7d7e6cbc"
+    name: "some random ops job 1"
+    desc: "this is a little script"
+    categories:
+      - "production ops / testing"
+      - "admin stuff"
+    source:
+      git:
+        repo: "git@github.com:peter-mcconnell/oneofmyautomationthingys.git"
+        branch: "refs/heads/master"
+        secrettype: "vault"
+        secretref: "kv-v1/keys/key-automationthingy"
+    rbac:
+      - roles:
+        - name: "developers"
+          permissions:
+            - "read"
+  - id: "868c55ac-6e2b-4c99-b84c-535b7d7e6cbc"
+    name: "a script from disk"
+    desc: "this is another little script which we're loading direct from disk"
+    categories:
+      - "production ops / other category"
+      - "more stuff"
+    source:
+      disk:
+        path: "scripts/960fde7e-6f47-45e2-ab38-300b5ec84707/"
+    rbac:
+      - roles:
+        - name: "developers"
+          permissions:
+            - "read"
+            - "execute"
