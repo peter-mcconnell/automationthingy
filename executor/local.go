@@ -19,13 +19,15 @@ type LocalExecutor struct {
 	ID             uuid.UUID
 	Config         config.Config
 	Script         config.ScriptData
-	Flusher        http.Flusher
 	ResponseWriter http.ResponseWriter
 }
 
 func (e *LocalExecutor) Execute() {
 	fmt.Printf("running %s", e.Script.Name)
-	// TODO: abstract to support other sources (e.g. local disk)
+	flusher, ok := e.ResponseWriter.(http.Flusher)
+	if !ok {
+		panic("failed to set flusher")
+	}
 	if e.Script.Source.Git.Repo != "" {
 		if err := scm.CloneScriptRepos([]config.ScriptData{e.Script}); err != nil {
 			panic(err)
@@ -65,6 +67,6 @@ func (e *LocalExecutor) Execute() {
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
 		io.WriteString(e.ResponseWriter, scanner.Text()+"\n")
-		e.Flusher.Flush()
+		flusher.Flush()
 	}
 }

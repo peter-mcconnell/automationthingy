@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -13,6 +14,7 @@ func (s *Server) project(w http.ResponseWriter, r *http.Request, data commonView
 	data.View = struct{ Project model.ProjectData }{Project: project.GetOne(project_id)}
 	err := s.templates.ExecuteTemplate(w, "project", data)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

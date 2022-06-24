@@ -9,7 +9,10 @@ import (
 )
 
 type Logger interface {
-	Printf(format string, v ...interface{})
+	Infof(format string, v ...interface{})
+	Errorf(format string, v ...interface{})
+	Fatalf(format string, v ...interface{})
+	Debugf(format string, v ...interface{})
 }
 
 type Server struct {
@@ -30,7 +33,7 @@ type ApiRequest struct {
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s.logger.Printf("%s %s", r.Method, r.URL.Path)
+	s.logger.Debugf("%s %s", r.Method, r.URL.Path)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	s.mux.ServeHTTP(w, r)
 }

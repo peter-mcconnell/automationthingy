@@ -2,6 +2,7 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -10,6 +11,7 @@ import (
 )
 
 func (c *Config) LoadConfig() (Config, error) {
+	// load base config
 	configFile, err := ioutil.ReadFile(".automationthingy.yaml")
 	config := Config{}
 	if err != nil {
@@ -20,7 +22,23 @@ func (c *Config) LoadConfig() (Config, error) {
 		return config, err
 	}
 	err = c.ValidateConfig(config)
+	// load script sources
 	return config, err
+}
+
+func (c *Config) GetConfigAsJson() string {
+	// prints the
+	configJson, err := json.MarshalIndent(c, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+	return string(configJson)
+}
+
+func (c *Config) LoadScriptSources() {
+	// if err := scm.CloneScriptRepos("/tmp/x"); err != nil {
+	// 	panic(err)
+	// }
 }
 
 func (c *Config) ValidateConfig(cfg Config) error {

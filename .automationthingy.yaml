@@ -1,10 +1,14 @@
 ---
 # sample .automationthingy.yaml for your viewing pleasure
+
+# define roles
 rbac:
   roles:
     - name: "admin"
     - name: "developers"
-  groups:
+
+  # define how groups (set via auth) map to roles
+  grouprolemapping:
     - name: "admin"
       roles:
         - "admin"
@@ -12,24 +16,14 @@ rbac:
       roles:
         - "developers"
 
+  # define how users map to roles
+  userrolemapping:
+    - name: "me@petermcconnell.com"
+      roles:
+        - "admin"
+
+# declare some scripts 'inline'
 scripts:
-  - id: "268c55ac-6e2b-4c99-b84c-535b7d7e6cbc"
-    name: "some random ops job 1"
-    desc: "this is a little script"
-    categories:
-      - "production ops / testing"
-      - "admin stuff"
-    source:
-      git:
-        repo: "git@github.com:peter-mcconnell/oneofmyautomationthingys.git"
-        branch: "refs/heads/master"
-        secrettype: "vault"
-        secretref: "kv-v1/keys/key-automationthingy"
-    rbac:
-      - roles:
-        - name: "developers"
-          permissions:
-            - "read"
   - id: "868c55ac-6e2b-4c99-b84c-535b7d7e6cbc"
     name: "a script from disk"
     desc: "this is another little script which we're loading direct from disk"
@@ -45,3 +39,22 @@ scripts:
           permissions:
             - "read"
             - "execute"
+
+# pull in more scripts from external sources
+scriptsources:
+  git:
+    - repo: "git@github.com:peter-mcconnell/oneofmyautomationthingys.git"
+      branch: "refs/heads/master"
+      secrettype: "vault"
+      secretref: "kv-v1/keys/key-automationthingy"
+      rbac:
+        - roles:
+          - name: "developers"
+            permissions:
+              - "read"
+
+# secret manager configurations
+secretmgrs:
+  vault:
+    addr: "http://10.43.56.96:8200"
+    tokenfilepath: ".vaulttoken"

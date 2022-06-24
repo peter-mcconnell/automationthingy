@@ -1,13 +1,6 @@
-package config
+package types
 
 import "github.com/google/uuid"
-
-type Config struct {
-	Rbac          Rbac          `json:"rbac"`
-	Scripts       []ScriptData  `json:"scripts"`
-	Scriptsources ScriptSources `json:"scriptsources"`
-	Secretmgrs    SecretMgrs    `json:"secretmgrs"`
-}
 
 type SecretMgrs struct {
 	Vault Vault `json:"vault"`
