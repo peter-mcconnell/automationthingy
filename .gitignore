@@ -31,6 +31,7 @@ go.work
 # End of https://www.toptal.com/developers/gitignore/api/go
 
 automationthingy
+automationthingy.pprof
 .vscode
 key-automationthingy
 key-automationthingy.pub

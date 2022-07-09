@@ -1,4 +1,4 @@
-.PHONY: build run run_and_update k3s vaultdev
+.PHONY: build run run_and_update k3s vaultdev pprof
 build:
 	go build -o automationthingy
 
@@ -8,6 +8,10 @@ run: build
 run_and_update:
 	@if ! command -v gow > /dev/null; then echo "please install 'gow'. go install github.com/mitranim/gow@latest" && exit 1; fi
 	gow run .
+
+pprof:
+	@if [ ! -f automationthingy.pprof ]; then echo "automationthingy.pprof not found. run binary with -pprof to create it" && exit 1; fi
+	go tool pprof -http=":9080" ./automationthingy automationthingy.pprof
 
 k3s:
 	@if ! command -v k3s > /dev/null; then echo "please install 'k3s'" && exit 1; fi

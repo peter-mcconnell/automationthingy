@@ -6,7 +6,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"runtime/pprof"
 	"strconv"
+	"syscall"
 
 	"github.com/peter-mcconnell/automationthingy/api"
 	"github.com/peter-mcconnell/automationthingy/logger"
@@ -20,11 +23,13 @@ const (
 
 type flagStruct struct {
 	ConfigPrint *bool
+	ConfigPprof *bool
 }
 
 func flags() flagStruct {
 	cmdflags := flagStruct{
-		ConfigPrint: flag.Bool("configprint", false, "a bool"),
+		ConfigPrint: flag.Bool("configprint", false, "print config to stdout and exit"),
+		ConfigPprof: flag.Bool("pprof", false, "create pprof file"),
 	}
 	flag.Parse()
 	return cmdflags
@@ -35,6 +40,29 @@ func main() {
 	logger, err := logger.Logger()
 	if err != nil {
 		panic(err)
+	}
+	if *cmdflags.ConfigPprof {
+		logger.Info("enabling pprof. writing to automationthingy.pprof")
+		f, err := os.Create("automationthingy.pprof")
+		if err != nil {
+			panic(err)
+		}
+		// runtime.SetCPUProfileRate(500)
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+		defer f.Close()
+
+		c := make(chan os.Signal, 2)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		onKill := func(c chan os.Signal) {
+			select {
+			case <-c:
+				defer f.Close()
+				defer pprof.StopCPUProfile()
+				defer os.Exit(0)
+			}
+		}
+		go onKill(c)
 	}
 	api_server, err := api.NewServer(logger, http.NewServeMux())
 	// handle -configprint=true
