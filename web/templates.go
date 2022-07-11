@@ -11,6 +11,7 @@ type commonViewData struct {
 	Title    string
 	Projects []model.ProjectData
 	View     any
+	BaseHref string
 }
 
 func (s *Server) addTemplates() error {

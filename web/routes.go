@@ -24,6 +24,7 @@ func (s *Server) addRoutes() error {
 	commonViewData := commonViewData{
 		Title:    "AutomationThingy",
 		Projects: projects.GetAll(),
+		BaseHref: "http://192.168.1.143:8080",
 	}
 	var headers map[string]string
 	var routes = []route{
