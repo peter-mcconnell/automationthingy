@@ -6,17 +6,11 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/peter-mcconnell/automationthingy/config"
+	"github.com/peter-mcconnell/automationthingy/types"
 )
 
-type Logger interface {
-	Infof(format string, v ...interface{})
-	Errorf(format string, v ...interface{})
-	Fatalf(format string, v ...interface{})
-	Debugf(format string, v ...interface{})
-}
-
 type Server struct {
-	logger    Logger
+	logger    types.Logger
 	mux       *http.ServeMux
 	templates *template.Template
 	routes    []*route
@@ -38,13 +32,12 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.mux.ServeHTTP(w, r)
 }
 
-func NewServer(logger Logger, mux *http.ServeMux) (*Server, error) {
+func NewServer(logger types.Logger, mux *http.ServeMux) (*Server, error) {
 	server := &Server{
 		logger: logger,
 		mux:    mux,
 	}
-	cfg := config.Config{}
-	automationthingyConfig, err := cfg.LoadConfig()
+	automationthingyConfig, err := config.LoadConfig(logger)
 	if err != nil {
 		return server, err
 	}

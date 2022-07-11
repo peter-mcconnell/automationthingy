@@ -67,7 +67,11 @@ func main() {
 	api_server, err := api.NewServer(logger, http.NewServeMux())
 	// handle -configprint=true
 	if *cmdflags.ConfigPrint {
-		fmt.Println(api_server.Config.GetConfigAsJson())
+		cfgJ, err := api_server.Config.GetConfigAsJson()
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(cfgJ)
 		os.Exit(0)
 	}
 	if err != nil {

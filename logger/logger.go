@@ -15,7 +15,5 @@ func Logger() (*zap.SugaredLogger, error) {
 		log.Fatal(err)
 	}
 	defer logger.Sync()
-
-	sugar := logger.Sugar()
-	return sugar, nil
+	return logger.Sugar(), nil
 }

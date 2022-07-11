@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/google/uuid"
-	"github.com/peter-mcconnell/automationthingy/config"
+	"github.com/peter-mcconnell/automationthingy/types"
 )
 
 type Project struct{}
@@ -11,7 +11,7 @@ type ProjectData struct {
 	ID          uuid.UUID
 	Name        string
 	Description string
-	Scripts     []config.ScriptData
+	Scripts     []types.ScriptData
 }
 
 func (p *Project) GetAll() []ProjectData {

@@ -2,7 +2,6 @@
 package scm
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/go-git/go-git/v5"
@@ -10,24 +9,25 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 
-	"github.com/peter-mcconnell/automationthingy/config"
 	"github.com/peter-mcconnell/automationthingy/secretmgr"
+	"github.com/peter-mcconnell/automationthingy/types"
 )
 
 type Git struct {
-	script config.ScriptData
+	Logger types.Logger
 }
 
-func (g Git) Clone(dir string) error {
+func (g Git) Clone(source types.GitScriptSource, dest string) error {
+	g.Logger.Debugf("git cloning %s into %s", source.Repo, dest)
 	var auth transport.AuthMethod
-	if g.script.Source.Git.Secrettype != "" {
+	if source.Secrettype != "" {
 		// currently we only support basic private keys
 		// TODO: PAC, passkey etc
-		secretManager, err := secretmgr.GetSecretMgr(g.script.Source.Git.Secretref)
+		secretManager, err := secretmgr.GetSecretMgr(source.Secretref)
 		if err != nil {
 			return err
 		}
-		secret, err := secretManager.Get(g.script.Source.Git.Secretref)
+		secret, err := secretManager.Get(source.Secretref)
 		if err != nil {
 			return err
 		}
@@ -36,15 +36,15 @@ func (g Git) Clone(dir string) error {
 			return err
 		}
 	}
-	fmt.Printf(" - cloning into %s\n", dir)
+	g.Logger.Infof(" - cloning into %s", dest)
 	_, err := git.PlainClone(
-		dir,
+		dest,
 		false,
 		&git.CloneOptions{
-			URL:           g.script.Source.Git.Repo,
+			URL:           source.Repo,
 			Auth:          auth,
 			Progress:      os.Stdout,
-			ReferenceName: plumbing.ReferenceName(g.script.Source.Git.Branch),
+			ReferenceName: plumbing.ReferenceName(source.Branch),
 			SingleBranch:  true,
 		},
 	)

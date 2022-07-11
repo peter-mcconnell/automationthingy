@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/peter-mcconnell/automationthingy/config"
 	"github.com/peter-mcconnell/automationthingy/model"
+	"github.com/peter-mcconnell/automationthingy/types"
 )
 
 func (s *Server) job(w http.ResponseWriter, r *http.Request, data commonViewData) {
@@ -15,7 +15,7 @@ func (s *Server) job(w http.ResponseWriter, r *http.Request, data commonViewData
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	data.View = struct{ Script config.ScriptData }{Script: script}
+	data.View = struct{ Script types.ScriptData }{Script: script}
 	err = s.templates.ExecuteTemplate(w, "job", data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

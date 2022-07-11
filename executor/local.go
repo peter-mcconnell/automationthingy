@@ -12,13 +12,13 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/peter-mcconnell/automationthingy/config"
-	"github.com/peter-mcconnell/automationthingy/scm"
+	"github.com/peter-mcconnell/automationthingy/types"
 )
 
 type LocalExecutor struct {
 	ID             uuid.UUID
 	Config         config.Config
-	Script         config.ScriptData
+	Script         types.ScriptData
 	ResponseWriter http.ResponseWriter
 }
 
@@ -29,9 +29,9 @@ func (e *LocalExecutor) Execute() {
 		panic("failed to set flusher")
 	}
 	if e.Script.Source.Git.Repo != "" {
-		if err := scm.CloneScriptRepos([]config.ScriptData{e.Script}); err != nil {
-			panic(err)
-		}
+		// if err := scm.CloneScriptRepos([]types.ScriptSources{e.Script}); err != nil {
+		// 	panic(err)
+		// }
 	}
 	dir := fmt.Sprintf("scripts/%s", e.Script.ID)
 	path := fmt.Sprintf("%s/.automationthingy.yaml", dir)
@@ -40,7 +40,7 @@ func (e *LocalExecutor) Execute() {
 		// TODO: improve error handling
 		panic(err)
 	}
-	var targetScript config.SourceScriptData
+	var targetScript types.SourceScriptData
 	for _, script := range sourceConfig.Scripts {
 		if script.ID == e.ID {
 			targetScript = script
