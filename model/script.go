@@ -12,13 +12,13 @@ type Script struct {
 	Config config.Config
 }
 
-func (s *Script) GetAll() []types.ScriptData {
-	return []types.ScriptData{}
+func (s *Script) GetAll() []types.Script {
+	return s.Config.Scripts
 }
 
-func (s *Script) GetOne(id uuid.UUID) (types.ScriptData, error) {
+func (s *Script) GetOne(id uuid.UUID) (types.Script, error) {
 	if _, ok := s.Config.ScriptIndex[id]; ok {
 		return s.Config.Scripts[s.Config.ScriptIndex[id]], nil
 	}
-	return types.ScriptData{}, fmt.Errorf("no script found with id: %s", id)
+	return types.Script{}, fmt.Errorf("no script found with id: %s", id)
 }

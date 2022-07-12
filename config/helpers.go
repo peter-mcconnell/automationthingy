@@ -86,7 +86,7 @@ func LoadScriptSources(logger types.Logger, config *Config) error {
 			return err
 		}
 		for _, cfg := range sourceConfig.Sourcescripts {
-			config.Scripts = append(config.Scripts, types.ScriptData{
+			config.Scripts = append(config.Scripts, types.Script{
 				ID:         cfg.ID,
 				Name:       cfg.Name,
 				Desc:       cfg.Desc,

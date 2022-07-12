@@ -10,7 +10,7 @@ import (
 
 type Config struct {
 	Rbac          types.Rbac          `json:"rbac"`
-	Scripts       []types.ScriptData  `json:"scripts"`
+	Scripts       []types.Script      `json:"scripts"`
 	Scriptsources types.ScriptSources `json:"scriptsources"`
 	Secretmgrs    types.SecretMgrs    `json:"secretmgrs"`
 	Logger        types.Logger

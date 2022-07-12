@@ -74,7 +74,7 @@ type ScriptRbac struct {
 	Roles []ScriptRbacRole `json:"roles"`
 }
 
-type ScriptData struct {
+type Script struct {
 	ID         uuid.UUID    `json:"id"`
 	Name       string       `json:"name"`
 	Desc       string       `json:"desc"`

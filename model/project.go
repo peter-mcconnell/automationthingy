@@ -11,7 +11,7 @@ type ProjectData struct {
 	ID          uuid.UUID
 	Name        string
 	Description string
-	Scripts     []types.ScriptData
+	Scripts     []types.Script
 }
 
 func (p *Project) GetAll() []ProjectData {
