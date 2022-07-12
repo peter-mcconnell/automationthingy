@@ -17,7 +17,7 @@ type Git struct {
 	Logger types.Logger
 }
 
-func (g Git) Clone(source types.GitScriptSource, dest string) error {
+func (g Git) Clone(source types.GitSource, dest string) error {
 	g.Logger.Debugf("git cloning %s into %s", source.Repo, dest)
 	var auth transport.AuthMethod
 	if source.Secrettype != "" {

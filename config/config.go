@@ -9,12 +9,12 @@ import (
 )
 
 type Config struct {
-	Rbac          types.Rbac          `json:"rbac"`
-	Scripts       []types.Script      `json:"scripts"`
-	Scriptsources types.ScriptSources `json:"scriptsources"`
-	Secretmgrs    types.SecretMgrs    `json:"secretmgrs"`
-	Logger        types.Logger
-	ScriptIndex   map[uuid.UUID]int
+	Rbac        types.Rbac       `json:"rbac"`
+	Scripts     []types.Script   `json:"scripts"`
+	Sources     types.Sources    `json:"sources"`
+	Secretmgrs  types.SecretMgrs `json:"secretmgrs"`
+	Logger      types.Logger
+	ScriptIndex map[uuid.UUID]int
 }
 
 type SourceConfig struct {

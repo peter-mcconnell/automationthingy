@@ -11,7 +11,7 @@ import (
 	"github.com/peter-mcconnell/automationthingy/types"
 )
 
-func CloneScriptRepos(scriptSources types.ScriptSources) error {
+func CloneScriptRepos(scriptSources types.Sources) error {
 	var errs []string
 
 	// git repos

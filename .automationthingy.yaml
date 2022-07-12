@@ -42,7 +42,7 @@ scripts:
               - "execute"
 
 # pull in more scripts from external sources
-scriptsources:
+sources:
   git:
     - repo: "git@github.com:peter-mcconnell/oneofmyautomationthingys.git"
       branch: "refs/heads/master"

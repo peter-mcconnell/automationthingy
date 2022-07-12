@@ -68,7 +68,7 @@ func LoadScriptSources(logger types.Logger, config *Config) error {
 	git := scm.Git{
 		Logger: logger,
 	}
-	for _, source := range config.Scriptsources.Git {
+	for _, source := range config.Sources.Git {
 		dest := fmt.Sprintf("scripts/%s", base64.StdEncoding.EncodeToString([]byte(source.Repo)))
 		// ensure source has been pulled
 		if _, err := os.Stat(dest); os.IsNotExist(err) {

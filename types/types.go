@@ -24,11 +24,11 @@ type Vault struct {
 	TokenFilePath string `json:"tokenfilepath"`
 }
 
-type ScriptSources struct {
-	Git  []GitScriptSource  `json:"git,omitempty"`
-	Disk []DiskScriptSource `json:"disk,omitempty"`
+type Sources struct {
+	Git  []GitSource  `json:"git,omitempty"`
+	Disk []DiskSource `json:"disk,omitempty"`
 }
-type GitScriptSource struct {
+type GitSource struct {
 	Repo       string `json:"repo"`
 	Branch     string `json:"branch"`
 	Secrettype string `json:"secrettype,omitempty"`
@@ -36,7 +36,7 @@ type GitScriptSource struct {
 	Rbac       []Rbac `json:"rbac"`
 }
 
-type DiskScriptSource struct {
+type DiskSource struct {
 	Path string `json:"path"`
 }
 
@@ -47,17 +47,6 @@ type SourceScriptData struct {
 	Workdir    string    `json:"workdir"`
 	Command    string    `json:"command"`
 	Categories []string  `json:"categories"`
-}
-
-type GitSource struct {
-	Repo       string `json:"repo"`
-	Branch     string `json:"branch"`
-	Secrettype string `json:"secrettype,omitempty"`
-	Secretref  string `json:"secretref,omitempty"`
-}
-
-type DiskSource struct {
-	Path string `json:"path"`
 }
 
 type ScriptSource struct {
