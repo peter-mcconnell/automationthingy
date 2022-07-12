@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
-	"github.com/peter-mcconnell/automationthingy/types"
 )
 
 type Config struct {
@@ -13,7 +12,7 @@ type Config struct {
 	Scripts     []Script   `json:"scripts"`
 	Sources     Sources    `json:"sources"`
 	Secretmgrs  SecretMgrs `json:"secretmgrs"`
-	Logger      types.Logger
+	Logger      Logger
 	ScriptIndex map[uuid.UUID]int
 }
 

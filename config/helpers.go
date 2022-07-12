@@ -8,11 +8,10 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/peter-mcconnell/automationthingy/types"
 	"gopkg.in/yaml.v2"
 )
 
-func LoadConfig(logger *types.Logger) (Config, error) {
+func LoadConfig(logger *Logger) (Config, error) {
 	// read config file
 	configFilePath := ".automationthingy.yaml"
 	(*logger).Debugf("Reading config file: %s", configFilePath)
@@ -70,12 +69,12 @@ func ValidateConfig(cfg Config) error {
 	return nil
 }
 
-func LoadSourceDisk(logger types.Logger, config *Config) error {
+func LoadSourceDisk(logger Logger, config *Config) error {
 	logger.Debug("LoadSource:Disk - TODO: NOT IMPLEMENTED")
 	return nil
 }
 
-func LoadSources(logger types.Logger, config *Config) error {
+func LoadSources(logger Logger, config *Config) error {
 	if err := LoadSourceDisk(logger, config); err != nil {
 		return err
 	}
@@ -85,7 +84,7 @@ func LoadSources(logger types.Logger, config *Config) error {
 	return nil
 }
 
-func LoadSourceGit(logger types.Logger, config *Config) error {
+func LoadSourceGit(logger Logger, config *Config) error {
 	git := Git{
 		Logger: logger,
 	}
@@ -121,7 +120,7 @@ func LoadSourceGit(logger types.Logger, config *Config) error {
 	return nil
 }
 
-func LoadSourceConfig(logger types.Logger, path string) (*SourceConfig, error) {
+func LoadSourceConfig(logger Logger, path string) (*SourceConfig, error) {
 	logger.Infof("loading source config at %s", path)
 	sourceConfig := SourceConfig{}
 	sourceConfigFile, err := ioutil.ReadFile(path)

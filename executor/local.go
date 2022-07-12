@@ -12,7 +12,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/peter-mcconnell/automationthingy/config"
-	"github.com/peter-mcconnell/automationthingy/types"
 )
 
 type LocalExecutor struct {
@@ -20,7 +19,7 @@ type LocalExecutor struct {
 	Config         config.Config
 	Script         config.Script
 	ResponseWriter http.ResponseWriter
-	Logger         types.Logger
+	Logger         config.Logger
 }
 
 func (e *LocalExecutor) Execute() error {

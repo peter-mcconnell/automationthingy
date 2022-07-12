@@ -10,11 +10,10 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 
 	"github.com/peter-mcconnell/automationthingy/secretmgr"
-	"github.com/peter-mcconnell/automationthingy/types"
 )
 
 type Git struct {
-	Logger types.Logger
+	Logger Logger
 }
 
 func (g Git) Clone(source GitSource, dest string) error {
