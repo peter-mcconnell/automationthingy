@@ -9,16 +9,16 @@ import (
 )
 
 type Config struct {
-	Rbac        types.Rbac       `json:"rbac"`
-	Scripts     []types.Script   `json:"scripts"`
-	Sources     types.Sources    `json:"sources"`
-	Secretmgrs  types.SecretMgrs `json:"secretmgrs"`
+	Rbac        Rbac       `json:"rbac"`
+	Scripts     []Script   `json:"scripts"`
+	Sources     Sources    `json:"sources"`
+	Secretmgrs  SecretMgrs `json:"secretmgrs"`
 	Logger      types.Logger
 	ScriptIndex map[uuid.UUID]int
 }
 
 type SourceConfig struct {
-	Sourcescripts []types.SourceScriptData `json:"sourcescripts"`
+	Scripts []Script `json:"scripts"`
 }
 
 func (c *Config) GetConfigAsJson() (string, error) {

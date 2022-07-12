@@ -18,7 +18,7 @@ import (
 type LocalExecutor struct {
 	ID             uuid.UUID
 	Config         config.Config
-	Script         types.Script
+	Script         config.Script
 	ResponseWriter http.ResponseWriter
 	Logger         types.Logger
 }

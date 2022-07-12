@@ -8,36 +8,43 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/peter-mcconnell/automationthingy/scm"
 	"github.com/peter-mcconnell/automationthingy/types"
 	"gopkg.in/yaml.v2"
 )
 
-func LoadConfig(logger types.Logger) (Config, error) {
-	// load base config
+func LoadConfig(logger *types.Logger) (Config, error) {
+	// read config file
 	configFilePath := ".automationthingy.yaml"
-	logger.Debugf("Reading config file: %s", configFilePath)
+	(*logger).Debugf("Reading config file: %s", configFilePath)
 	configFile, err := ioutil.ReadFile(configFilePath)
-	config := Config{
-		Logger:      logger,
-		ScriptIndex: make(map[uuid.UUID]int),
-	}
 	if err != nil {
-		return config, err
+		return Config{}, err
+	}
+
+	// map config file to Config object
+	config := Config{
+		Logger:      *logger,
+		ScriptIndex: make(map[uuid.UUID]int),
 	}
 	err = yaml.UnmarshalStrict(configFile, &config)
 	if err != nil {
 		return config, err
 	}
-	if err = LoadScriptSources(logger, &config); err != nil {
+
+	// load config sources
+	if err = LoadSources(config.Logger, &config); err != nil {
 		return config, err
 	}
+
+	// generate scripts index
 	if err = IndexScripts(&config); err != nil {
 		return config, err
 	}
-	logger.Debugf("Validating config file")
+
+	// validate config
+	config.Logger.Debugf("Validating config file")
 	err = ValidateConfig(config)
-	// load script sources
+
 	return config, err
 }
 
@@ -63,14 +70,30 @@ func ValidateConfig(cfg Config) error {
 	return nil
 }
 
-func LoadScriptSources(logger types.Logger, config *Config) error {
-	logger.Debug("Loading script sources")
-	git := scm.Git{
+func LoadSourceDisk(logger types.Logger, config *Config) error {
+	logger.Debug("LoadSource:Disk - TODO: NOT IMPLEMENTED")
+	return nil
+}
+
+func LoadSources(logger types.Logger, config *Config) error {
+	if err := LoadSourceDisk(logger, config); err != nil {
+		return err
+	}
+	if err := LoadSourceGit(logger, config); err != nil {
+		return err
+	}
+	return nil
+}
+
+func LoadSourceGit(logger types.Logger, config *Config) error {
+	git := Git{
 		Logger: logger,
 	}
 	for _, source := range config.Sources.Git {
+		logger.Debugf("LoadSourceGit: %s [%s]", source.Repo, source.Branch)
 		dest := fmt.Sprintf("scripts/%s", base64.StdEncoding.EncodeToString([]byte(source.Repo)))
-		// ensure source has been pulled
+
+		// LoadSourceGit: clone
 		if _, err := os.Stat(dest); os.IsNotExist(err) {
 			logger.Debugf("%s directory '%s' doesn't exist. Creating it", source.Repo, dest)
 			if err := git.Clone(source, dest); err != nil {
@@ -80,13 +103,14 @@ func LoadScriptSources(logger types.Logger, config *Config) error {
 			logger.Debugf("%s directory '%s' already exists. Pulling latest", source.Repo, dest)
 			logger.Info("TODO - ensure latest?")
 		}
-		// load source config
+
+		// LoadSourceGit: read config
 		sourceConfig, err := LoadSourceConfig(logger, fmt.Sprintf("%s/.automationthingy.yaml", dest))
 		if err != nil {
 			return err
 		}
-		for _, cfg := range sourceConfig.Sourcescripts {
-			config.Scripts = append(config.Scripts, types.Script{
+		for _, cfg := range (*sourceConfig).Scripts {
+			config.Scripts = append(config.Scripts, Script{
 				ID:         cfg.ID,
 				Name:       cfg.Name,
 				Desc:       cfg.Desc,
@@ -97,22 +121,22 @@ func LoadScriptSources(logger types.Logger, config *Config) error {
 	return nil
 }
 
-func LoadSourceConfig(logger types.Logger, path string) (SourceConfig, error) {
+func LoadSourceConfig(logger types.Logger, path string) (*SourceConfig, error) {
 	logger.Infof("loading source config at %s", path)
-	sourceConfigFile, err := ioutil.ReadFile(path)
 	sourceConfig := SourceConfig{}
+	sourceConfigFile, err := ioutil.ReadFile(path)
 	if err != nil {
-		return sourceConfig, err
+		return &sourceConfig, err
 	}
 	err = yaml.UnmarshalStrict(sourceConfigFile, &sourceConfig)
 	if err != nil {
-		return sourceConfig, err
+		return &sourceConfig, err
 	}
-	err = ValidateSourceConfig(sourceConfig)
-	return sourceConfig, err
+	err = validateSourceConfig(sourceConfig)
+	return &sourceConfig, err
 }
 
-func ValidateSourceConfig(cfg SourceConfig) error {
+func validateSourceConfig(cfg SourceConfig) error {
 	// TODO: add source config validation
 	return nil
 }

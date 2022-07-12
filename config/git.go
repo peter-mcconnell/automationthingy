@@ -1,5 +1,5 @@
 /*Logic for interacting with GIT repos*/
-package scm
+package config
 
 import (
 	"os"
@@ -17,7 +17,7 @@ type Git struct {
 	Logger types.Logger
 }
 
-func (g Git) Clone(source types.GitSource, dest string) error {
+func (g Git) Clone(source GitSource, dest string) error {
 	g.Logger.Debugf("git cloning %s into %s", source.Repo, dest)
 	var auth transport.AuthMethod
 	if source.Secrettype != "" {

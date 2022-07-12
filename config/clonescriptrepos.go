@@ -1,5 +1,5 @@
 /*Logic for cloning script repos*/
-package scm
+package config
 
 import (
 	"encoding/base64"
@@ -7,11 +7,9 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/peter-mcconnell/automationthingy/types"
 )
 
-func CloneScriptRepos(scriptSources types.Sources) error {
+func CloneScriptRepos(scriptSources Sources) error {
 	var errs []string
 
 	// git repos

@@ -37,7 +37,7 @@ func NewServer(logger types.Logger, mux *http.ServeMux) (*Server, error) {
 		logger: logger,
 		mux:    mux,
 	}
-	automationthingyConfig, err := config.LoadConfig(logger)
+	automationthingyConfig, err := config.LoadConfig(&logger)
 	if err != nil {
 		return server, err
 	}
