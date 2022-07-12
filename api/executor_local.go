@@ -26,10 +26,13 @@ func (s *Server) apiV1ExecutorLocal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	exectr := executor.LocalExecutor{
+		Logger:         s.logger,
 		ID:             apiRequest.id,
 		Config:         *s.Config,
 		Script:         script,
 		ResponseWriter: w,
 	}
-	exectr.Execute()
+	if err = exectr.Execute(); err != nil {
+		s.logger.Error(err.Error())
+	}
 }

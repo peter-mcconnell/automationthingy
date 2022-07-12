@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/peter-mcconnell/automationthingy/scm"
 	"github.com/peter-mcconnell/automationthingy/types"
 	"gopkg.in/yaml.v2"
@@ -18,7 +19,8 @@ func LoadConfig(logger types.Logger) (Config, error) {
 	logger.Debugf("Reading config file: %s", configFilePath)
 	configFile, err := ioutil.ReadFile(configFilePath)
 	config := Config{
-		Logger: logger,
+		Logger:      logger,
+		ScriptIndex: make(map[uuid.UUID]int),
 	}
 	if err != nil {
 		return config, err
@@ -30,10 +32,21 @@ func LoadConfig(logger types.Logger) (Config, error) {
 	if err = LoadScriptSources(logger, &config); err != nil {
 		return config, err
 	}
+	if err = IndexScripts(&config); err != nil {
+		return config, err
+	}
 	logger.Debugf("Validating config file")
 	err = ValidateConfig(config)
 	// load script sources
 	return config, err
+}
+
+func IndexScripts(cfg *Config) error {
+	// creates a hashmap for O(1) script lookups
+	for idx, script := range cfg.Scripts {
+		cfg.ScriptIndex[script.ID] = idx
+	}
+	return nil
 }
 
 func ValidateConfig(cfg Config) error {

@@ -4,6 +4,7 @@ package config
 import (
 	"encoding/json"
 
+	"github.com/google/uuid"
 	"github.com/peter-mcconnell/automationthingy/types"
 )
 
@@ -13,21 +14,8 @@ type Config struct {
 	Scriptsources types.ScriptSources `json:"scriptsources"`
 	Secretmgrs    types.SecretMgrs    `json:"secretmgrs"`
 	Logger        types.Logger
+	ScriptIndex   map[uuid.UUID]int
 }
-
-/**
-sourcescripts:
-  # python example
-  - id: "268c55ac-6e2b-4c99-b84c-535b7d7e6cbc"
-    name: "some random ops job 1"
-    desc: "this is a little script"
-    workdir: "./mythingy/"
-    command: |-
-      python3 main.py
-    categories:
-      - "production ops / testing"
-      - "admin stuff"
-*/
 
 type SourceConfig struct {
 	Sourcescripts []types.SourceScriptData `json:"sourcescripts"`

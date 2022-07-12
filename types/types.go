@@ -81,6 +81,8 @@ type ScriptData struct {
 	Source     ScriptSource `json:"source"`
 	Rbac       []ScriptRbac `json:"rbac"`
 	Categories []string     `json:"categories"`
+	Command    string       `json:"command"`
+	Workdir    string       `json:"workdir"`
 }
 
 type Rbac struct {

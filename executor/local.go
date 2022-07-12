@@ -3,6 +3,7 @@ package executor
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -20,44 +21,23 @@ type LocalExecutor struct {
 	Config         config.Config
 	Script         types.ScriptData
 	ResponseWriter http.ResponseWriter
+	Logger         types.Logger
 }
 
-func (e *LocalExecutor) Execute() {
-	fmt.Printf("running %s", e.Script.Name)
+func (e *LocalExecutor) Execute() error {
+	e.Logger.Infof("running script: %s [%s]", e.Script.Name, e.Script.ID)
 	flusher, ok := e.ResponseWriter.(http.Flusher)
 	if !ok {
-		panic("failed to set flusher")
-	}
-	if e.Script.Source.Git.Repo != "" {
-		// if err := scm.CloneScriptRepos([]types.ScriptSources{e.Script}); err != nil {
-		// 	panic(err)
-		// }
+		return errors.New("failed to set flusher")
 	}
 	dir := fmt.Sprintf("scripts/%s", e.Script.ID)
-	// path := fmt.Sprintf("%s/.automationthingy.yaml", dir)
-	// sourceConfig, err := e.Config.LoadSourceConfig(path)
-	// if err != nil {
-	// 	// TODO: improve error handling
-	// 	panic(err)
-	// }
-	var targetScript types.SourceScriptData
-	// for _, script := range sourceConfig.Scripts {
-	// 	if script.ID == e.ID {
-	// 		targetScript = script
-	// 		break
-	// 	}
-	// }
-	if targetScript.Name == "" {
-		// TODO: improve error handling
-		panic("script not found")
-	}
-	fmt.Printf("running %s\n", targetScript.Command)
-	args := strings.Fields(strings.TrimSpace(targetScript.Command))
+	e.Logger.Debugf("have command: %s", e.Script.Command)
+	args := strings.Fields(strings.TrimSpace(e.Script.Command))
 	cmd := exec.Command(args[0], args[1:]...)
-	cmd.Dir = fmt.Sprintf("%s/%s", dir, targetScript.Workdir)
+	cmd.Dir = fmt.Sprintf("%s/%s", dir, e.Script.Workdir)
 	out, err := cmd.StdoutPipe()
 	if err != nil {
-		panic(err)
+		return err
 	}
 	// TODO: distinguish stderr as errors
 	cmd.Stderr = cmd.Stdout
@@ -69,4 +49,5 @@ func (e *LocalExecutor) Execute() {
 		io.WriteString(e.ResponseWriter, scanner.Text()+"\n")
 		flusher.Flush()
 	}
+	return nil
 }
