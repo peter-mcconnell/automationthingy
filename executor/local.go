@@ -8,7 +8,6 @@ import (
 	"io"
 	"net/http"
 	"os/exec"
-	"strings"
 
 	"github.com/google/uuid"
 
@@ -32,8 +31,11 @@ func (e *LocalExecutor) Execute() error {
 	}
 	dir := fmt.Sprintf("scripts/%s", e.Script.ID)
 	e.Logger.Debugf("have command: %s", e.Script.Command)
-	args := strings.Fields(strings.TrimSpace(e.Script.Command))
-	cmd := exec.Command(args[0], args[1:]...)
+	args := []string{}
+	if len(e.Script.Command) > 1 {
+		args = e.Script.Command[1:]
+	}
+	cmd := exec.Command(e.Script.Command[0], args...)
 	cmd.Dir = fmt.Sprintf("%s/%s", dir, e.Script.Workdir)
 	out, err := cmd.StdoutPipe()
 	if err != nil {

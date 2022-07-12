@@ -30,15 +30,16 @@ scripts:
     categories:
       - "production ops / other category"
       - "more stuff"
-    source:
-      disk:
-        path: "scripts/960fde7e-6f47-45e2-ab38-300b5ec84707/"
+    workdir: "scripts/960fde7e-6f47-45e2-ab38-300b5ec84707/"
+    command:
+      - "python3"
+      - "main.py"
     rbac:
       - roles:
-        - name: "developers"
-          permissions:
-            - "read"
-            - "execute"
+          - name: "developers"
+            permissions:
+              - "read"
+              - "execute"
 
 # pull in more scripts from external sources
 scriptsources:
@@ -49,9 +50,9 @@ scriptsources:
       secretref: "kv-v1/keys/key-automationthingy"
       rbac:
         - roles:
-          - name: "developers"
-            permissions:
-              - "read"
+            - name: "developers"
+              permissions:
+                - "read"
 
 # secret manager configurations
 secretmgrs:
