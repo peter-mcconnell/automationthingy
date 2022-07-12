@@ -27,7 +27,7 @@ func LoadConfig(logger types.Logger) (Config, error) {
 	if err != nil {
 		return config, err
 	}
-	if err = LoadScriptSources(logger, config); err != nil {
+	if err = LoadScriptSources(logger, &config); err != nil {
 		return config, err
 	}
 	logger.Debugf("Validating config file")
@@ -50,7 +50,7 @@ func ValidateConfig(cfg Config) error {
 	return nil
 }
 
-func LoadScriptSources(logger types.Logger, config Config) error {
+func LoadScriptSources(logger types.Logger, config *Config) error {
 	logger.Debug("Loading script sources")
 	git := scm.Git{
 		Logger: logger,
@@ -68,7 +68,38 @@ func LoadScriptSources(logger types.Logger, config Config) error {
 			logger.Info("TODO - ensure latest?")
 		}
 		// load source config
-		logger.Info("TODO - load source config")
+		sourceConfig, err := LoadSourceConfig(logger, fmt.Sprintf("%s/.automationthingy.yaml", dest))
+		if err != nil {
+			return err
+		}
+		for _, cfg := range sourceConfig.Sourcescripts {
+			config.Scripts = append(config.Scripts, types.ScriptData{
+				ID:         cfg.ID,
+				Name:       cfg.Name,
+				Desc:       cfg.Desc,
+				Categories: cfg.Categories,
+			})
+		}
 	}
+	return nil
+}
+
+func LoadSourceConfig(logger types.Logger, path string) (SourceConfig, error) {
+	logger.Infof("loading source config at %s", path)
+	sourceConfigFile, err := ioutil.ReadFile(path)
+	sourceConfig := SourceConfig{}
+	if err != nil {
+		return sourceConfig, err
+	}
+	err = yaml.UnmarshalStrict(sourceConfigFile, &sourceConfig)
+	if err != nil {
+		return sourceConfig, err
+	}
+	err = ValidateSourceConfig(sourceConfig)
+	return sourceConfig, err
+}
+
+func ValidateSourceConfig(cfg SourceConfig) error {
+	// TODO: add source config validation
 	return nil
 }

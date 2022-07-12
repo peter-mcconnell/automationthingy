@@ -15,8 +15,22 @@ type Config struct {
 	Logger        types.Logger
 }
 
+/**
+sourcescripts:
+  # python example
+  - id: "268c55ac-6e2b-4c99-b84c-535b7d7e6cbc"
+    name: "some random ops job 1"
+    desc: "this is a little script"
+    workdir: "./mythingy/"
+    command: |-
+      python3 main.py
+    categories:
+      - "production ops / testing"
+      - "admin stuff"
+*/
+
 type SourceConfig struct {
-	Scripts []types.SourceScriptData `json:"scripts"`
+	Sourcescripts []types.SourceScriptData `json:"sourcescripts"`
 }
 
 func (c *Config) GetConfigAsJson() (string, error) {

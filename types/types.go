@@ -41,11 +41,12 @@ type DiskScriptSource struct {
 }
 
 type SourceScriptData struct {
-	ID      uuid.UUID `json:"id"`
-	Name    string    `json:"name"`
-	Desc    string    `json:"desc"`
-	Workdir string    `json:"workdir"`
-	Command string    `json:"command"`
+	ID         uuid.UUID `json:"id"`
+	Name       string    `json:"name"`
+	Desc       string    `json:"desc"`
+	Workdir    string    `json:"workdir"`
+	Command    string    `json:"command"`
+	Categories []string  `json:"categories"`
 }
 
 type GitSource struct {

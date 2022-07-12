@@ -34,19 +34,19 @@ func (e *LocalExecutor) Execute() {
 		// }
 	}
 	dir := fmt.Sprintf("scripts/%s", e.Script.ID)
-	path := fmt.Sprintf("%s/.automationthingy.yaml", dir)
-	sourceConfig, err := e.Config.LoadSourceConfig(path)
-	if err != nil {
-		// TODO: improve error handling
-		panic(err)
-	}
+	// path := fmt.Sprintf("%s/.automationthingy.yaml", dir)
+	// sourceConfig, err := e.Config.LoadSourceConfig(path)
+	// if err != nil {
+	// 	// TODO: improve error handling
+	// 	panic(err)
+	// }
 	var targetScript types.SourceScriptData
-	for _, script := range sourceConfig.Scripts {
-		if script.ID == e.ID {
-			targetScript = script
-			break
-		}
-	}
+	// for _, script := range sourceConfig.Scripts {
+	// 	if script.ID == e.ID {
+	// 		targetScript = script
+	// 		break
+	// 	}
+	// }
 	if targetScript.Name == "" {
 		// TODO: improve error handling
 		panic("script not found")
