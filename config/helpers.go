@@ -114,6 +114,7 @@ func LoadSourceGit(logger Logger, config *Config) error {
 				Name:       cfg.Name,
 				Desc:       cfg.Desc,
 				Categories: cfg.Categories,
+				Workdir:    cfg.Workdir,
 			})
 		}
 	}

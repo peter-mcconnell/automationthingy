@@ -30,7 +30,7 @@ scripts:
     categories:
       - "production ops / other category"
       - "more stuff"
-    workdir: "scripts/960fde7e-6f47-45e2-ab38-300b5ec84707/"
+    workdir: "scripts/960fde7e-6f47-45e2-ab38-300b5ec84707/mythingy/"
     command:
       - "python3"
       - "main.py"
