@@ -34,5 +34,5 @@ func (s *Server) errNotFound(w http.ResponseWriter, err error) {
 }
 
 func (s *Server) errInternalError(w http.ResponseWriter, err error) {
-	s.err(w, err, http.StatusNotFound)
+	s.err(w, err, http.StatusInternalServerError)
 }

@@ -39,8 +39,8 @@ func (s *Server) HandleFunc(pattern string, handler http.Handler) {
 func (s *Server) addRoutes() error {
 	var routes = []route{
 		newRoute("/api/v1/config", s.apiV1Config),
-		newRoute("/api/v1/executor_demo/", s.apiV1ExecutorDemo),
 		newRoute("/api/v1/executor_local/", s.apiV1ExecutorLocal),
+		newRoute("/api/v1/executor_kubernetesjob/", s.apiV1ExecutorKubernetesjob),
 		newRoute("/", func(w http.ResponseWriter, r *http.Request) {
 			http.NotFound(w, r)
 		}),

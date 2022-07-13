@@ -63,15 +63,28 @@ type ScriptRbac struct {
 	Roles []ScriptRbacRole `json:"roles"`
 }
 
+type KubernetesJob struct {
+	Namespace               string `json:"namespace,omitempty"`
+	Ttlsecondsafterfinished int    `json:"ttlsecondsafterfinished,omitempty"`
+	Image                   string `json:"image,omitempty"`
+	Cluster                 string `json:"cluster,omitempty"`
+	Imagepullpolicy         string `json:"imagepullpolicy,omitempty"`
+	Restartpolicy           string `json:"restartpolicy,omitempty"`
+	Backofflimit            int32  `json:"backofflimit,omitempty"`
+	Parallelism             int32  `json:"parallelism,omitempty"`
+	Completions             int32  `json:"completions,omitempty"`
+}
+
 type Script struct {
-	ID         uuid.UUID    `json:"id"`
-	Name       string       `json:"name"`
-	Desc       string       `json:"desc"`
-	Source     ScriptSource `json:"source"`
-	Rbac       []ScriptRbac `json:"rbac"`
-	Categories []string     `json:"categories"`
-	Command    []string     `json:"command"`
-	Workdir    string       `json:"workdir"`
+	ID            uuid.UUID     `json:"id"`
+	Name          string        `json:"name"`
+	Desc          string        `json:"desc"`
+	Source        ScriptSource  `json:"source"`
+	Rbac          []ScriptRbac  `json:"rbac"`
+	Categories    []string      `json:"categories"`
+	Command       []string      `json:"command"`
+	Workdir       string        `json:"workdir,omitempty"`
+	Kubernetesjob KubernetesJob `json:"kubernetesjob,omitempty"`
 }
 
 type Rbac struct {

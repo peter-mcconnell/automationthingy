@@ -7,7 +7,7 @@ import (
 	"github.com/peter-mcconnell/automationthingy/model"
 )
 
-func (s *Server) apiV1ExecutorLocal(w http.ResponseWriter, r *http.Request) {
+func (s *Server) apiV1ExecutorKubernetesjob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "Keep-Alive")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 
@@ -20,7 +20,7 @@ func (s *Server) apiV1ExecutorLocal(w http.ResponseWriter, r *http.Request) {
 		s.errNotFound(w, err)
 		return
 	}
-	exectr := executor.LocalExecutor{
+	exectr := executor.KubernetesjobExecutor{
 		Logger:         s.logger,
 		ID:             apiRequest.id,
 		Config:         *s.Config,

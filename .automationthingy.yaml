@@ -24,6 +24,31 @@ rbac:
 
 # declare some scripts 'inline'
 scripts:
+  - id: "268c55ac-6e2b-4c99-b84c-535b7d7e6cbd"
+    name: "execute as a kubernetes job"
+    desc: "this one we want to execute as a kubernetes job"
+    kubernetesjob:
+      namespace: "default"
+      cluster: "default"
+      ttlsecondsafterfinished: 100
+      image: "ubuntu:20.04"
+      imagepullpolicy: "Always"
+      restartpolicy: "Never"
+      backofflimit: 3
+      parallelism: 1
+      completions: 1
+    categories:
+      - "production ops / other category"
+      - "more stuff"
+    command:
+      - "python3"
+      - "main.py"
+    rbac:
+      - roles:
+          - name: "developers"
+            permissions:
+              - "read"
+              - "execute"
   - id: "868c55ac-6e2b-4c99-b84c-535b7d7e6cbc"
     name: "a script from disk"
     desc: "this is another little script which we're loading direct from disk"
