@@ -31,7 +31,7 @@ scripts:
       namespace: "default"
       cluster: "default"
       ttlsecondsafterfinished: 100
-      image: "ubuntu:20.04"
+      image: "python:3.8"
       imagepullpolicy: "Always"
       restartpolicy: "Never"
       backofflimit: 3

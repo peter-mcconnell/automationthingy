@@ -65,7 +65,7 @@ type ScriptRbac struct {
 
 type KubernetesJob struct {
 	Namespace               string `json:"namespace,omitempty"`
-	Ttlsecondsafterfinished int    `json:"ttlsecondsafterfinished,omitempty"`
+	Ttlsecondsafterfinished int32  `json:"ttlsecondsafterfinished,omitempty"`
 	Image                   string `json:"image,omitempty"`
 	Cluster                 string `json:"cluster,omitempty"`
 	Imagepullpolicy         string `json:"imagepullpolicy,omitempty"`
