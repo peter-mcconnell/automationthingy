@@ -50,6 +50,8 @@ func (s *Server) HandleFunc(pattern string, handler http.Handler) {
 
 func (s *Server) addRoutes() error {
 	var routes = []route{
+		newRoute("/api/v1/login/github/callback", s.apiV1GithubCallback),
+		newRoute("/api/v1/login/github", s.apiV1GithubLogin),
 		newRoute("/api/v1/config", s.apiV1Config),
 		newRoute("/api/v1/executor_local/", s.apiV1ExecutorLocal),
 		newRoute("/api/v1/executor_kubernetesjob/", s.apiV1ExecutorKubernetesjob),
