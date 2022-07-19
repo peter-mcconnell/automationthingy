@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/peter-mcconnell/automationthingy/model"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 type route struct {
@@ -12,7 +13,15 @@ type route struct {
 }
 
 func (s *Server) HandleFunc(pattern string, handler http.Handler) {
-	s.mux.Handle(pattern, handler)
+	oltphandler := otelhttp.NewHandler(
+		otelhttp.WithRouteTag(
+			pattern,
+			handler,
+		),
+		pattern,
+		otelhttp.WithPublicEndpoint(),
+	)
+	s.Mux.Handle(pattern, oltphandler)
 }
 
 func (s *Server) staticAsset(w http.ResponseWriter, r *http.Request) {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -36,6 +37,7 @@ func flags() flagStruct {
 }
 
 func main() {
+	ctx := context.Background()
 	cmdflags := flags()
 	logger, err := logger.Logger()
 	if err != nil {
@@ -64,7 +66,7 @@ func main() {
 		}
 		go onKill(c)
 	}
-	api_server, err := api.NewServer(logger, http.NewServeMux())
+	api_server, err := api.NewServer(api_port, logger, http.NewServeMux())
 	// handle -configprint=true
 	if *cmdflags.ConfigPrint {
 		cfgJ, err := api_server.Config.GetConfigAsJson()
@@ -78,14 +80,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	web_server, err := web.NewServer(log.Default(), http.NewServeMux())
+	web_server, err := web.NewServer(ctx, logger, http.NewServeMux())
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// run api server
-	go http.ListenAndServe(":"+strconv.Itoa(api_port), api_server)
+	api_server.RunBackground()
 
 	// run web server
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(web_port), web_server))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(web_port), web_server.Mux))
 }

@@ -37,3 +37,4 @@ key-automationthingy
 key-automationthingy.pub
 scripts/*
 .vaulttoken
+.env

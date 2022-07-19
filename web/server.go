@@ -1,30 +1,31 @@
 package web
 
 import (
+	"context"
 	"html/template"
 	"net/http"
+
+	"github.com/peter-mcconnell/automationthingy/config"
 )
 
-type Logger interface {
-	Printf(format string, v ...interface{})
-}
-
 type Server struct {
-	logger    Logger
-	mux       *http.ServeMux
+	ctx       context.Context
+	logger    config.Logger
 	templates *template.Template
 	routes    []*route
+	Mux       *http.ServeMux
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s.logger.Printf("%s %s", r.Method, r.URL.Path)
-	s.mux.ServeHTTP(w, r)
+	s.logger.Debugf("%s %s", r.Method, r.URL.Path)
+	s.Mux.ServeHTTP(w, r)
 }
 
-func NewServer(logger Logger, mux *http.ServeMux) (*Server, error) {
+func NewServer(ctx context.Context, logger config.Logger, mux *http.ServeMux) (*Server, error) {
 	server := &Server{
+		ctx:    ctx,
 		logger: logger,
-		mux:    mux,
+		Mux:    mux,
 	}
 	if err := server.addRoutes(); err != nil {
 		return server, err

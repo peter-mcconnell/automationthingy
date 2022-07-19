@@ -1,10 +1,18 @@
 package api
 
 import (
+	"context"
+	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/trace"
 )
 
 type route struct {
@@ -33,7 +41,11 @@ func (s *Server) parseApiRequest(url string) ApiRequest {
 }
 
 func (s *Server) HandleFunc(pattern string, handler http.Handler) {
-	s.mux.Handle(pattern, handler)
+	oltphandler := otelhttp.NewHandler(
+		handler,
+		pattern,
+	)
+	s.Mux.Handle(pattern, oltphandler)
 }
 
 func (s *Server) addRoutes() error {
@@ -48,6 +60,41 @@ func (s *Server) addRoutes() error {
 	for _, route := range routes {
 		s.HandleFunc(route.pattern, route.handler)
 	}
+	ctx := context.Background()
+
+	// Configure a new exporter using environment variables for sending data to Honeycomb over gRPC.
+	exporter, err := otlptracegrpc.New(ctx)
+	if err != nil {
+		log.Fatalf("failed to initialize exporter: %v", err)
+	}
+
+	// Create a new tracer provider with a batch span processor and the otlp exporter.
+	tp := trace.NewTracerProvider(
+		trace.WithBatcher(exporter),
+	)
+
+	// Handle shutdown errors in a sensible manner where possible
+	defer func() { _ = tp.Shutdown(ctx) }()
+
+	// Set the Tracer Provider global
+	otel.SetTracerProvider(tp)
+
+	// Register the trace context and baggage propagators so data is propagated across services/processes.
+	otel.SetTextMapPropagator(
+		propagation.NewCompositeTextMapPropagator(
+			propagation.TraceContext{},
+			propagation.Baggage{},
+		),
+	)
+	// Implement an HTTP Handler func to be instrumented
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, World")
+	})
+
+	// Initialize HTTP handler instrumentation
+	otelHandler := otelhttp.NewHandler(handler, "hello")
+	s.Mux.Handle("/hello", otelHandler)
+	http.ListenAndServe(":8081", s.Mux)
 	return nil
 }
 
