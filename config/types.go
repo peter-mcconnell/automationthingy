@@ -1,13 +1,17 @@
 package config
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"github.com/peter-mcconnell/automationthingy/secretmgr"
+)
 
 type Config struct {
-	Rbac        Rbac       `json:"rbac"`
-	Scripts     []Script   `json:"scripts"`
-	Sources     Sources    `json:"sources"`
-	Secretmgrs  SecretMgrs `json:"secretmgrs"`
-	General     General    `json:"general"`
+	Rbac        Rbac                      `json:"rbac"`
+	Scripts     []Script                  `json:"scripts"`
+	Sources     Sources                   `json:"sources"`
+	Secretmgrs  SecretMgrs                `json:"secretmgrs"`
+	General     General                   `json:"general"`
+	Secretmgr   secretmgr.ConfigSecretMgr `json:"secretmgr"`
 	Logger      Logger
 	ScriptIndex map[uuid.UUID]int
 }
@@ -122,6 +126,17 @@ type RbacUserMapping struct {
 	Roles []string `json:"roles"`
 }
 
+type GithubAuth struct {
+	Clientid    string `json:"clientid"`
+	Redirecturi string `json:"redirecturi"`
+	Secrettype  string `json:"secrettype"`
+	Secretref   string `json:"secretref"`
+}
+
+type Auth struct {
+	Github GithubAuth `json:"github,omitempty"`
+}
+
 type Api struct {
 	Port string `json:"port"`
 	Host string `json:"host"`
@@ -130,6 +145,7 @@ type Api struct {
 type Web struct {
 	Port string `json:"port"`
 	Host string `json:"host"`
+	Auth Auth   `json:"auth,omitempty"`
 }
 
 type General struct {

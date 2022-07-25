@@ -87,6 +87,7 @@ func LoadSources(logger Logger, config *Config) error {
 func LoadSourceGit(logger Logger, config *Config) error {
 	git := Git{
 		Logger: logger,
+		Config: config,
 	}
 	for _, source := range config.Sources.Git {
 		logger.Debugf("LoadSourceGit: %s [%s]", source.Repo, source.Branch)

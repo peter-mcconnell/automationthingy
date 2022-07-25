@@ -30,7 +30,8 @@ type ApiRequest struct {
 func (s *Server) RunBackground() {
 	sPort := ":" + s.Config.General.Api.Port
 	s.logger.Debugf("running server in background on port %s", sPort)
-	go http.ListenAndServe(sPort, s.Mux)
+	http.ListenAndServe(sPort, s.Mux)
+	// go http.ListenAndServe(sPort, s.Mux)
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {

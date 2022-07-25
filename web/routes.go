@@ -37,6 +37,8 @@ func (s *Server) addRoutes() error {
 	}
 	var headers map[string]string
 	var routes = []route{
+		newRoute("/login/github/callback", s.githubCallback),
+		newRoute("/login/github", s.githubLogin),
 		newRoute("/job/", func(w http.ResponseWriter, r *http.Request) {
 			s.job(w, r, commonViewData)
 		}),
