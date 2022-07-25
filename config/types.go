@@ -140,6 +140,7 @@ type Auth struct {
 type Api struct {
 	Port string `json:"port"`
 	Host string `json:"host"`
+	Auth Auth   `json:"auth,omitempty"`
 }
 
 type Web struct {
