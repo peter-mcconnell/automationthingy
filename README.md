@@ -1,6 +1,9 @@
 automationthingy
 ================
 
+This is a rapid development environment for kicking around some ideas in a very
+hacky manner. It's more of a design tool than something anyone should use.
+
 honeycomb.io integration
 ------------------------
 
