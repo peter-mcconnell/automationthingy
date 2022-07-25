@@ -1,5 +1,12 @@
 ---
 # sample .automationthingy.yaml for your viewing pleasure
+general:
+  api:
+    port: "8081"
+    host: "http://localhost:8081/"
+  web:
+    port: "8080"
+    host: "http://localhost:8080/"
 
 # define roles
 rbac:

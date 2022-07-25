@@ -96,7 +96,6 @@ func (s *Server) addRoutes() error {
 	// Initialize HTTP handler instrumentation
 	otelHandler := otelhttp.NewHandler(handler, "hello")
 	s.Mux.Handle("/hello", otelHandler)
-	http.ListenAndServe(":8081", s.Mux)
 	return nil
 }
 

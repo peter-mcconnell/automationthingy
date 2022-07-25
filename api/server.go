@@ -4,7 +4,6 @@ import (
 	"context"
 	"html/template"
 	"net/http"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/peter-mcconnell/automationthingy/config"
@@ -12,7 +11,6 @@ import (
 
 type Server struct {
 	ctx       context.Context
-	port      int
 	logger    config.Logger
 	templates *template.Template
 	routes    []*route
@@ -30,9 +28,9 @@ type ApiRequest struct {
 }
 
 func (s *Server) RunBackground() {
-	sPort := ":" + strconv.Itoa(s.port)
+	sPort := ":" + s.Config.General.Api.Port
 	s.logger.Debugf("running server in background on port %s", sPort)
-	http.ListenAndServe(sPort, s.Mux)
+	go http.ListenAndServe(sPort, s.Mux)
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -41,9 +39,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.Mux.ServeHTTP(w, r)
 }
 
-func NewServer(port int, logger config.Logger, mux *http.ServeMux) (*Server, error) {
+func NewServer(logger config.Logger, mux *http.ServeMux) (*Server, error) {
 	server := &Server{
-		port:   port,
 		ctx:    context.Background(),
 		logger: logger,
 		Mux:    mux,
@@ -57,7 +54,5 @@ func NewServer(port int, logger config.Logger, mux *http.ServeMux) (*Server, err
 	if err := server.addRoutes(); err != nil {
 		return server, err
 	}
-	// dw
-	// server.RunBackground()
 	return server, nil
 }

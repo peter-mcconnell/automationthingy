@@ -3,22 +3,7 @@ package config
 
 import (
 	"encoding/json"
-
-	"github.com/google/uuid"
 )
-
-type Config struct {
-	Rbac        Rbac       `json:"rbac"`
-	Scripts     []Script   `json:"scripts"`
-	Sources     Sources    `json:"sources"`
-	Secretmgrs  SecretMgrs `json:"secretmgrs"`
-	Logger      Logger
-	ScriptIndex map[uuid.UUID]int
-}
-
-type SourceConfig struct {
-	Scripts []Script `json:"scripts"`
-}
 
 func (c *Config) GetConfigAsJson() (string, error) {
 	// returns the currently loaded config as a JSON string

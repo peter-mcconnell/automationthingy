@@ -9,17 +9,11 @@ import (
 	"os"
 	"os/signal"
 	"runtime/pprof"
-	"strconv"
 	"syscall"
 
 	"github.com/peter-mcconnell/automationthingy/api"
 	"github.com/peter-mcconnell/automationthingy/logger"
 	"github.com/peter-mcconnell/automationthingy/web"
-)
-
-const (
-	web_port = 8080
-	api_port = 8081
 )
 
 type flagStruct struct {
@@ -66,7 +60,10 @@ func main() {
 		}
 		go onKill(c)
 	}
-	api_server, err := api.NewServer(api_port, logger, http.NewServeMux())
+
+	logger.Info("instantiating servers")
+
+	api_server, err := api.NewServer(logger, http.NewServeMux())
 	// handle -configprint=true
 	if *cmdflags.ConfigPrint {
 		cfgJ, err := api_server.Config.GetConfigAsJson()
@@ -86,8 +83,10 @@ func main() {
 	}
 
 	// run api server
+	logger.Info("running api server")
 	api_server.RunBackground()
 
 	// run web server
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(web_port), web_server.Mux))
+	logger.Info("running web server")
+	log.Fatal(http.ListenAndServe(":"+web_server.Config.General.Web.Port, web_server.Mux))
 }

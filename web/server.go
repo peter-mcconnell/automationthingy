@@ -14,6 +14,7 @@ type Server struct {
 	templates *template.Template
 	routes    []*route
 	Mux       *http.ServeMux
+	Config    *config.Config
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +28,11 @@ func NewServer(ctx context.Context, logger config.Logger, mux *http.ServeMux) (*
 		logger: logger,
 		Mux:    mux,
 	}
+	automationthingyConfig, err := config.LoadConfig(&logger)
+	if err != nil {
+		return server, err
+	}
+	server.Config = &automationthingyConfig
 	if err := server.addRoutes(); err != nil {
 		return server, err
 	}

@@ -2,6 +2,20 @@ package config
 
 import "github.com/google/uuid"
 
+type Config struct {
+	Rbac        Rbac       `json:"rbac"`
+	Scripts     []Script   `json:"scripts"`
+	Sources     Sources    `json:"sources"`
+	Secretmgrs  SecretMgrs `json:"secretmgrs"`
+	General     General    `json:"general"`
+	Logger      Logger
+	ScriptIndex map[uuid.UUID]int
+}
+
+type SourceConfig struct {
+	Scripts []Script `json:"scripts"`
+}
+
 type Logger interface {
 	Infof(format string, v ...interface{})
 	Errorf(format string, v ...interface{})
@@ -106,4 +120,19 @@ type RbacGroupMapping struct {
 type RbacUserMapping struct {
 	Name  string   `json:"name"`
 	Roles []string `json:"roles"`
+}
+
+type Api struct {
+	Port string `json:"port"`
+	Host string `json:"host"`
+}
+
+type Web struct {
+	Port string `json:"port"`
+	Host string `json:"host"`
+}
+
+type General struct {
+	Web Web `json:"web"`
+	Api Api `json:"api"`
 }
