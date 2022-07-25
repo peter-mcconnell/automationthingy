@@ -1,9 +1,20 @@
 ---
 # sample .automationthingy.yaml for your viewing pleasure
+secretmgr:
+  vault:
+    token: "root"
+    addr: "http://10.43.56.96:8200"
+
 general:
   api:
     port: "8081"
     host: "http://localhost:8081/"
+    auth:
+      github:
+        clientid: "5749cc64ea32a1506ea7"
+        redirecturi: "http://localhost:8081/api/v1/login/github/callback"
+        secrettype: "vault"
+        secretref: "kv-v1/keys/githubapp"
   web:
     port: "8080"
     host: "http://localhost:8080/"

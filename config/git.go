@@ -14,6 +14,7 @@ import (
 
 type Git struct {
 	Logger Logger
+	Config *Config
 }
 
 func (g Git) Clone(source GitSource, dest string) error {
@@ -22,11 +23,11 @@ func (g Git) Clone(source GitSource, dest string) error {
 	if source.Secrettype != "" {
 		// currently we only support basic private keys
 		// TODO: PAC, passkey etc
-		secretManager, err := secretmgr.GetSecretMgr(source.Secretref)
+		secretManager, err := secretmgr.GetSecretMgr(source.Secretref, &g.Config.Secretmgr)
 		if err != nil {
 			return err
 		}
-		secret, err := secretManager.Get(source.Secretref)
+		secret, err := secretManager.Get(source.Secretref, "cert")
 		if err != nil {
 			return err
 		}
